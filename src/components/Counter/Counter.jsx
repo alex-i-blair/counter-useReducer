@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useReducer } from 'react';
 import styles from './Counter.css';
 
 const { yellow, green, red } = {
@@ -7,31 +7,42 @@ const { yellow, green, red } = {
   red: 'rgb(239, 68, 68)',
 };
 
+const initialState = { counter: 0, color: yellow };
+const reducer = (state, action) => {
+  console.log('state, action', state, action);
+  switch (action.type) {
+    case 'INCREMENT':
+      return { ...state, counter: state.counter + 1 };
+    case 'DECREMENT':
+      return { ...state, counter: state.counter - 1 };
+    case 'COLOR_ZERO':
+      return { ...state, color: yellow };
+    case 'COLOR_POSITIVE':
+      return { ...state, color: green };
+    case 'COLOR_NEGATIVE':
+      return { ...state, color: red };
+    default:
+      throw new Error('reducer failed to increment state of counter');
+  }
+};
+
 export default function Counter() {
-  const [count, setCount] = useState(0);
-  const [currentColor, setCurrentColor] = useState(yellow);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const handleIncrement = () => {
+    dispatch({ type: 'INCREMENT' });
+  };
+  const handleDecrement = () => {
+    dispatch({ type: 'DECREMENT' });
+  };
+  const handleColor = () => {
+    state.counter === 0 && dispatch({ type: 'COLOR_ZERO' });
+    state.counter > 0 && dispatch({ type: 'COLOR_POSITIVE' });
+    state.counter < 0 && dispatch({ type: 'COLOR_NEGATIVE' });
+  };
 
   useEffect(() => {
-    if (count === 0) {
-      setCurrentColor(yellow);
-    }
-
-    if (count > 0) {
-      setCurrentColor(green);
-    }
-
-    if (count < 0) {
-      setCurrentColor(red);
-    }
-  }, [count]);
-
-  const increment = () => {
-    setCount((prevState) => prevState + 1);
-  };
-
-  const decrement = () => {
-    setCount((prevState) => prevState - 1);
-  };
+    handleColor();
+  }, [state.counter]);
 
   const reset = () => {
     setCount(0);
@@ -39,11 +50,11 @@ export default function Counter() {
 
   return (
     <main className={styles.main}>
-      <h1 style={{ color: currentColor }}>{count}</h1>
+      <h1 style={{ color: state.color }}>{state.counter}</h1>
       <div>
         <button
           type="button"
-          onClick={increment}
+          onClick={handleIncrement}
           aria-label="increment"
           style={{ backgroundColor: green }}
         >
@@ -51,7 +62,7 @@ export default function Counter() {
         </button>
         <button
           type="button"
-          onClick={decrement}
+          onClick={handleDecrement}
           aria-label="decrement"
           style={{ backgroundColor: red }}
         >
