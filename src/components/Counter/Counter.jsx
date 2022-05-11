@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './Counter.css';
 
-const colors = {
+const { yellow, green, red } = {
   yellow: 'rgb(236, 222, 153)',
   green: 'rgb(52, 211, 153)',
   red: 'rgb(239, 68, 68)',
@@ -9,19 +9,19 @@ const colors = {
 
 export default function Counter() {
   const [count, setCount] = useState(0);
-  const [currentColor, setCurrentColor] = useState(colors.yellow);
+  const [currentColor, setCurrentColor] = useState(yellow);
 
   useEffect(() => {
     if (count === 0) {
-      setCurrentColor(colors.yellow);
+      setCurrentColor(yellow);
     }
 
     if (count > 0) {
-      setCurrentColor(colors.green);
+      setCurrentColor(green);
     }
 
     if (count < 0) {
-      setCurrentColor(colors.red);
+      setCurrentColor(red);
     }
   }, [count]);
 
@@ -45,7 +45,7 @@ export default function Counter() {
           type="button"
           onClick={increment}
           aria-label="increment"
-          style={{ backgroundColor: colors.green }}
+          style={{ backgroundColor: green }}
         >
           Increment
         </button>
@@ -53,7 +53,7 @@ export default function Counter() {
           type="button"
           onClick={decrement}
           aria-label="decrement"
-          style={{ backgroundColor: colors.red }}
+          style={{ backgroundColor: red }}
         >
           Decrement
         </button>
@@ -61,7 +61,7 @@ export default function Counter() {
           type="button"
           aria-label="reset"
           onClick={reset}
-          style={{ backgroundColor: colors.yellow }}
+          style={{ backgroundColor: yellow }}
         >
           Reset
         </button>
