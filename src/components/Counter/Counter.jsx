@@ -21,6 +21,8 @@ const reducer = (state, action) => {
       return { ...state, color: green };
     case 'COLOR_NEGATIVE':
       return { ...state, color: red };
+    case 'RESET':
+      return initialState;
     default:
       throw new Error('reducer failed to increment state of counter');
   }
@@ -45,7 +47,7 @@ export default function Counter() {
   }, [state.counter]);
 
   const reset = () => {
-    setCount(0);
+    dispatch({ type: 'RESET' });
   };
 
   return (
