@@ -9,7 +9,6 @@ const { yellow, green, red } = {
 
 const initialState = { counter: 0, color: yellow };
 const reducer = (state, action) => {
-  console.log('state, action', state, action);
   switch (action.type) {
     case 'INCREMENT':
       return { ...state, counter: state.counter + 1 };
