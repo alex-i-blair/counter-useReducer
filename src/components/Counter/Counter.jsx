@@ -1,4 +1,4 @@
-import { useEffect, useState, useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import styles from './Counter.css';
 
 const { yellow, green, red } = {
