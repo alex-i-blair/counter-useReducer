@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useReducer } from 'react';
 import styles from './Counter.css';
 
 const { yellow, green, red } = {
@@ -9,17 +9,24 @@ const { yellow, green, red } = {
 
 const initialState = { count: 0, color: yellow };
 const reducer = (state, action) => {
+  function handleColor(newCount) {
+    if (newCount === 0) return yellow;
+    if (newCount < 0) return red;
+    if (newCount > 0) return green;
+  }
   switch (action.type) {
     case 'INCREMENT':
-      return { ...state, count: state.count + 1 };
+      return {
+        ...state,
+        count: state.count + 1,
+        color: handleColor(state.count + 1),
+      };
     case 'DECREMENT':
-      return { ...state, count: state.count - 1 };
-    case 'COLOR_ZERO':
-      return { ...state, color: yellow };
-    case 'COLOR_POSITIVE':
-      return { ...state, color: green };
-    case 'COLOR_NEGATIVE':
-      return { ...state, color: red };
+      return {
+        ...state,
+        count: state.count - 1,
+        color: handleColor(state.count - 1),
+      };
     case 'RESET':
       return initialState;
     default:
@@ -35,15 +42,6 @@ export default function Counter() {
   const handleDecrement = () => {
     dispatch({ type: 'DECREMENT' });
   };
-  const handleColor = () => {
-    state.count === 0 && dispatch({ type: 'COLOR_ZERO' });
-    state.count > 0 && dispatch({ type: 'COLOR_POSITIVE' });
-    state.count < 0 && dispatch({ type: 'COLOR_NEGATIVE' });
-  };
-
-  useEffect(() => {
-    handleColor();
-  }, [state.count]);
 
   const reset = () => {
     dispatch({ type: 'RESET' });
