@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useReducer } from 'react';
 import styles from './Counter.css';
 
 const { yellow, green, red } = {
@@ -7,23 +7,30 @@ const { yellow, green, red } = {
   red: 'rgb(239, 68, 68)',
 };
 
-const initialState = { counter: 0, color: yellow };
+const initialState = { count: 0, color: yellow };
 const reducer = (state, action) => {
+  function handleColor(newCount) {
+    if (newCount === 0) return yellow;
+    if (newCount < 0) return red;
+    if (newCount > 0) return green;
+  }
   switch (action.type) {
     case 'INCREMENT':
-      return { ...state, counter: state.counter + 1 };
+      return {
+        ...state,
+        count: state.count + 1,
+        color: handleColor(state.count + 1),
+      };
     case 'DECREMENT':
-      return { ...state, counter: state.counter - 1 };
-    case 'COLOR_ZERO':
-      return { ...state, color: yellow };
-    case 'COLOR_POSITIVE':
-      return { ...state, color: green };
-    case 'COLOR_NEGATIVE':
-      return { ...state, color: red };
+      return {
+        ...state,
+        count: state.count - 1,
+        color: handleColor(state.count - 1),
+      };
     case 'RESET':
       return initialState;
     default:
-      throw new Error('reducer failed to increment state of counter');
+      throw new Error('reducer failed to increment state of count');
   }
 };
 
@@ -35,15 +42,6 @@ export default function Counter() {
   const handleDecrement = () => {
     dispatch({ type: 'DECREMENT' });
   };
-  const handleColor = () => {
-    state.counter === 0 && dispatch({ type: 'COLOR_ZERO' });
-    state.counter > 0 && dispatch({ type: 'COLOR_POSITIVE' });
-    state.counter < 0 && dispatch({ type: 'COLOR_NEGATIVE' });
-  };
-
-  useEffect(() => {
-    handleColor();
-  }, [state.counter]);
 
   const reset = () => {
     dispatch({ type: 'RESET' });
@@ -51,7 +49,7 @@ export default function Counter() {
 
   return (
     <main className={styles.main}>
-      <h1 style={{ color: state.color }}>{state.counter}</h1>
+      <h1 style={{ color: state.color }}>{state.count}</h1>
       <div>
         <button
           type="button"
